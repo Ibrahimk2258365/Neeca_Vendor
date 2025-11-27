@@ -19,7 +19,7 @@ const steps = [
     return (
         <div>
             <div>
-                {/* Header Buttons */}
+              
                 <div className="flex justify-between items-center mt-5 ">
                     <Link href="/protected/product/list">
                         <button className="bg-[#FFE2CF] text-[12px] w-[80px] cursor-pointer h-[29px] rounded-[3px] text-[#F76300]">
