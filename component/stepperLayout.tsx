@@ -4,6 +4,11 @@ import useSteperStore from "../lib/store";
 import Link from "next/link";
 
 export default function StepperLayout({children}:{children:React.ReactNode}) {
+    const handleLogout = () => {
+    localStorage.removeItem("token"); // remove the token
+  };
+
+
 
     const current_step= useSteperStore((s)=>s.currentStep);
 const steps = [
@@ -30,7 +35,7 @@ const steps = [
                         {currentStepData?.label || "Agreement"}
                     </h1>
 
-                    <Link href="/public/login">
+                    <Link href="/public/login" onClick={handleLogout}>
                         <button className="bg-[#FFE2CF] text-[12px] w-[80px] h-[29px] cursor-pointer rounded-[3px] text-[#F76300]">
                             Logout
                         </button>
