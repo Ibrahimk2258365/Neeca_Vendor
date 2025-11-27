@@ -103,11 +103,14 @@ export default function LoginForm() {
         return;
       }
 
-      // ELSE → Client Login
+  
       response = await clientLogin({
+
         variables: {
+
           email: values.email,
           password: values.password,
+
         },
       });
 
