@@ -11,16 +11,27 @@
   "dependencies": {
     "next": "16.0.4",
     "react": "19.2.0",
-    "react-dom": "19.2.0"
+    "react-dom": "19.2.0",
+    "react-hot-toast": "^2.6.0"
   },
   "devDependencies": {
+    "@apollo/client": "^3.9.11",
+    "@hookform/resolvers": "^5.2.2",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "country-state-city": "^3.2.1",
     "eslint": "^9",
     "eslint-config-next": "16.0.4",
+    "graphql": "^16.11.0",
+    "jsonwebtoken": "^9.0.2",
+    "jwt-decode": "^4.0.0",
+    "react-phone-input-2": "^2.15.1",
+    "react-select": "^5.10.2",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "zod": "^4.1.13",
+    "zustand": "^5.0.8"
   }
 }
