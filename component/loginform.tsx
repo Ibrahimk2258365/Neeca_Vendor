@@ -65,7 +65,7 @@ export default function LoginForm() {
         // Decode with your type
         const decoded = jwtDecode<DecodedToken>(token);
 
-        console.log("Decoded:", decoded);
+        // console.log("Decoded:", decoded);
         localStorage.setItem("user", JSON.stringify(decoded));
 
         toast.success("Login successful!");
@@ -74,7 +74,7 @@ export default function LoginForm() {
         if (decoded.role === "admin") {
           router.push("/protected/dashboard/admin");
         } else {
-          router.push("/protected/stepper/agreement");
+          router.push("/protected/product/list");
         }
 
         return;
