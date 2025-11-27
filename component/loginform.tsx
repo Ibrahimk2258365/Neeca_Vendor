@@ -8,7 +8,8 @@ import { jwtDecode } from "jwt-decode";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-
+import { Admin_Login } from "@/graphql/mutations/AdminLogin";
+import { useState } from "react";
 const clientLoginInputSchema = z.object({
   email: z.string().email("Invalid email"),
   password: z.string().min(1, "Password is required"),
@@ -37,40 +38,91 @@ interface ClientLoginResponse {
   };
 }
 
+interface AdminLoginResponse {
+  adminLogin: {
+    id: string;
+    email: string;
+    token: string;
+    status: string;
+    success: boolean;
+    message: string;
+  };
+}
+
 export default function LoginForm() {
+  const [loginAs, setLoginAs] = useState<"client" | "admin">("client");
+
   const router = useRouter();
 
-  const { register, handleSubmit, formState: { errors, isSubmitting } } =
-    useForm<ClientLoginInput>({ resolver: zodResolver(clientLoginInputSchema) });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<ClientLoginInput>({
+    resolver: zodResolver(clientLoginInputSchema),
+  });
 
-  const [clientLogin] = useMutation<ClientLoginResponse, { email: string; password: string }>(
-    CLIENT_LOGIN
-  );
+  const [clientLogin] = useMutation<
+    ClientLoginResponse,
+    { email: string; password: string }
+  >(CLIENT_LOGIN);
 
+  const [adminLogin] = useMutation<
+    AdminLoginResponse,
+    { email: string; password: string }
+  >(Admin_Login);
+
+  //client login and admin login
   const onSubmit = async (values: ClientLoginInput) => {
     try {
-      const response = await clientLogin({
+      let response;
+
+      if (loginAs === "admin") {
+        response = await adminLogin({
+          variables: {
+            email: values.email,
+            password: values.password,
+          },
+        });
+
+        // Handle Admin Response
+        if (response.data?.adminLogin.success) {
+          const token = response.data.adminLogin.token;
+
+          localStorage.setItem("token", token);
+
+          const decoded = jwtDecode<DecodedToken>(token);
+
+          toast.success("Admin Login successful!");
+
+          router.push("/protected/dashboard/admin");
+          return;
+        }
+
+        toast.error(response.data?.adminLogin.message || "Admin login failed");
+        return;
+      }
+
+  
+      response = await clientLogin({
+
         variables: {
+
           email: values.email,
           password: values.password,
+
         },
       });
 
       if (response.data?.clientLogin.success) {
         const token = response.data.clientLogin.token;
 
-        // Save token
         localStorage.setItem("token", token);
 
-        // Decode with your type
         const decoded = jwtDecode<DecodedToken>(token);
-
-        // console.log("Decoded:", decoded);
-        localStorage.setItem("user", JSON.stringify(decoded));
 
         toast.success("Login successful!");
 
-        // Redirect based on role
         if (decoded.role === "admin") {
           router.push("/protected/dashboard/admin");
         } else {
@@ -80,7 +132,7 @@ export default function LoginForm() {
         return;
       }
 
-      toast.error(response.data?.clientLogin.message || "Login failed");
+      toast.error(response.data?.clientLogin.message || "Client login failed");
     } catch (err) {
       console.error(err);
       toast.error("Something went wrong");
@@ -97,7 +149,10 @@ export default function LoginForm() {
 
       <div className="flex mt-8  items-center justify-center border-1 border-gray-100 rounded-2xl shadow-lg shadow-gray-200 w-11/12 mx-auto ">
         <div className="w-full lg:w-1/2 h-[80vh] flex flex-col justify-center items-center ">
-          <form    onSubmit={handleSubmit(onSubmit)} className=" flex flex-col gap-4 mx-auto">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className=" flex flex-col gap-4 mx-auto"
+          >
             <div>
               <label htmlFor="">
                 <span className="text-red-500">*</span> Email Address
@@ -105,13 +160,12 @@ export default function LoginForm() {
               <input
                 className="px-2 py-1 border-gray-200 w-full rounded  border-1 placeholder:text-gray-400"
                 placeholder="Example@gmail.com"
-                     {...register("email")}
+                {...register("email")}
                 type="email"
-
               />
-                {errors.email && (
-          <p className="text-red-500 text-sm">{errors.email.message}</p>
-        )}
+              {errors.email && (
+                <p className="text-red-500 text-sm">{errors.email.message}</p>
+              )}
             </div>
 
             <div>
@@ -120,24 +174,42 @@ export default function LoginForm() {
               </label>
               <input
                 type="password"
-               {...register("password")}
+                {...register("password")}
                 className="w-full border-1 border-gray-200 placeholder:text-gray-400 text-black py-2 px-1 rounded"
                 placeholder="use character & Symbol"
               />
               {errors.password && (
-          <p className="text-red-500 text-sm">{errors.password.message}</p>
-        )}
+                <p className="text-red-500 text-sm">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
-            <div>
+            {/* <div>
               <input type="checkbox" className="w-5 h-5 mt-1 cursor-pointer " />
               <label htmlFor="" className="m-2 ">
                 Remember me
+              </label>  
+            </div> */}
+            <div className="flex items-center gap-2 mt-2">
+              <input
+                type="checkbox"
+                id="adminCheck"
+                className="w-4 h-4 cursor-pointer"
+                onChange={(e) =>
+                  setLoginAs(e.target.checked ? "admin" : "client")
+                }
+              />
+              <label htmlFor="adminCheck" className="cursor-pointer">
+                Login as Admin
               </label>
             </div>
 
             <div>
-              <button   type="submit"  className="bg-[#F76300] w-full h-10 text-lg font-semibold rounded-[3px] text-white  ">
-                  {isSubmitting ? "Logging in..." : "Login"}
+              <button
+                type="submit"
+                className="bg-[#F76300] w-full h-10 text-lg font-semibold rounded-[3px] text-white  "
+              >
+                {isSubmitting ? "Logging in..." : "Login"}
               </button>
             </div>
 
