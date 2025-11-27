@@ -41,7 +41,7 @@ const steps = [
                 <div className="bg-[#173B45] mt-10 py-5 px-20 rounded-[5px] overflow-x-auto whitespace-nowrap scrollbar-hidden">
                     <div className="flex justify-between">
                         {steps.map((step, index) => {
-                            // ✅ Logic: only allow clicking if step.id <= current_step
+                         
                             const isClickable = step.id <= current_step;
                             const isActive = step.id === current_step;
                             const isCompleted = step.id < current_step;
