@@ -30,29 +30,13 @@ export default function AdminDashboard() {
   );
 
   return (
-    <div className="flex">
-      {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-lg h-screen p-4 space-y-4">
-        <h2 className="text-xl font-bold text-[#F76300]">Admin Panel</h2>
+    <div className="">
 
-        <nav className="flex flex-col gap-3 mt-6">
-          {filteredMenu.map((item) => (
-            <Link
-              key={item.name}
-              href={item.href}
-              className="p-2 rounded hover:bg-gray-200"
-            >
-              {item.name}
-            </Link>
-          ))}
-        </nav>
-      </aside>
+       <div className="flex flex-col items-center justify-center  p-6">
+            <div className="text-4xl font-bold text-[#F76300] mb-4">Welcome Admin</div>
+            <div className="text-lg text-gray-700"> Choose a section from the left menu.</div>
 
-      {/* Main Content */}
-      <div className="flex-1 p-6">
-        <h1 className="text-3xl font-bold">Welcome Admin</h1>
-        <p className="text-gray-600">Choose a section from the left menu.</p>
-      </div>
+        </div>
     </div>
   );
 }

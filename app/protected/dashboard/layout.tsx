@@ -15,12 +15,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     { name: "Applicant Info", href: "/protected/dashboard/applicant-info" },
     { name: "Models", href: "/protected/dashboard/models" },
     { name: "Testing Labs", href: "/protected/dashboard/testing-labs" },
-    { name: "Printing Firms", href: "/protected/dashboard/printing-firms" },
-    { name: "Printing orders", href: "/protected/dashboard/printing-orders" },
-    { name: "Financials", href: "/protected/dashboard/financials" },
+    // { name: "Printing Firms", href: "/protected/dashboard/printing-firms" },
+    // { name: "Printing orders", href: "/protected/dashboard/printing-orders" },
+    { name: "Financials", href: "/protected/dashboard/financials"},
     { name: "Reports", href: "/protected/dashboard/reports" },
     { name: "Communication", href: "/protected/dashboard/communication" },
+    { name: "Payments", href: "/protected/dashboard/payments" },
+    { name: "UsersInfos", href: "/protected/dashboard/UsersInfos" }
   ];
+
 
   const filteredMenu = menuItems.filter(item => allowed.includes(item.name));
 
